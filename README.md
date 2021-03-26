@@ -2,7 +2,6 @@
 ![](https://github.com/linkml/linkml/workflows/Build/badge.svg)
 [![PyPi](https://img.shields.io/pypi/v/linkml.svg)](https://pypi.python.org/pypi/linkml)
 
-
 ## [Binder Link](https://mybinder.org/v2/gh/linkml/linkml/main?filepath=notebooks)
 
 # LinkML - <u>Link</u>ed data <u>M</u>odeling <u>L</u>anguage
