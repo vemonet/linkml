@@ -5,7 +5,7 @@ import yaml
 
 from linkml.generators.pythongen import PythonGenerator
 from linkml.utils.schemaloader import SchemaLoader
-from tests.test_issues.environment import env
+from tests.test_enhancements.environment import env
 from tests.utils.python_comparator import compare_python, compile_python
 from tests.utils.test_environment import TestEnvironmentTestCase
 
@@ -14,13 +14,19 @@ device: /dev/tty.Bluetooth-Incoming-Port
 label: AbCd0123-1111-FF10-AAF1-A1B2C3D4A1B2C3D4A1B2C3D4
 """
 
+d2_test = """
+device: /dev2/tty.Bluetooth-Incoming-Port
+label: AbCd0123-1111-FF10-AAF1-A1B2C3D4A1B2C3D4A1B2C3D4
+"""
+
 
 class PatternTestCase(TestEnvironmentTestCase):
     env = env
     testdir = 'issue_pattern'
 
+    @unittest.skip("Implement pattern testing")
     def test_pattern_1(self):
-        """ Test the pattern ehnancement  """
+        """ Test the pattern enhancement  """
         file = "pattern_1"
         env.generate_single_file(f'{self.testdir}/{file}.py',
                                  lambda: PythonGenerator(env.input_path(self.testdir, f'{file}.yaml'),
@@ -30,7 +36,9 @@ class PatternTestCase(TestEnvironmentTestCase):
         module = compile_python(env.expected_path(self.testdir, f"{file}.py"))
         d1 = yaml.load(StringIO(d1_test), yaml.loader.SafeLoader)
         dev1 = module.DiskDevice(**d1)
-        print("HERE")
+        with self.failUnlessRaises(ValueError):
+            d2 = yaml.load(StringIO(d2_test), yaml.loader.SafeLoader)
+            dev2 = module.DiskDevice(**d2)
 
 
 if __name__ == '__main__':
