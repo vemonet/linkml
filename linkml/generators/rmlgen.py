@@ -43,8 +43,6 @@ class RmlGenerator(Generator):
         self.format = format
 
     def serialize(self, **args) -> None:
-        # g = self.as_graph()
-        # data = g.serialize(format='turtle' if self.format in ['owl', 'ttl'] else self.format).decode()
         data = yaml.dump(
             self.as_dict(),
             Dumper=PrettierDumper,
@@ -61,22 +59,19 @@ class RmlGenerator(Generator):
 
         prefixes = {}
         for pfx in self.schema.prefixes.values():
-            # print(pfx.prefix_prefix)
-            # print(pfx.prefix_reference)
             prefixes[str(pfx.prefix_prefix)] = str(pfx.prefix_reference)
         
         mappings = {}
         for c in sv.all_classes().values():
             def add_po(p, o):
                 if o is not None:
-                    # g.add((class_uri, p, v))
                     mappings[str(c.name)]['po'].append({
                         'p': p,
                         'o': o
                     })
                     # if slot.identifier or slot.key:
             class_uri = URIRef(sv.get_uri(c, expand=True))
-            # add_pv(RDF.type, SH.NodeShape)
+
             mappings[str(c.name)] = {
                 'sources': ['your_file.csv~csv'],
                 'subject': f'{sv.schema.default_prefix}:$(subject_id)',
@@ -84,7 +79,7 @@ class RmlGenerator(Generator):
             }
 
             for s in sv.class_induced_slots(c.name):
-                # Quick fix to build CURIE
+                # TODO: improve this quick fix to build CURIE
                 add_po(f'{sv.schema.default_prefix}:{s.name}', f'$({s.name})')
 
 
